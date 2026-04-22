@@ -4,7 +4,9 @@ import { IoMdEyeOff } from "react-icons/io";
 import { FaArrowLeftLong } from "react-icons/fa6";
 import { useNavigate } from "react-router-dom";
 import { authDataContext } from "../context/AuthContext";
+
 import axios from "axios";
+import { userDataContext } from "../context/UserContext";
 
 function SignUp() {
   let [show, setShow] = useState(false);
@@ -13,6 +15,7 @@ function SignUp() {
   let [name, setName] = useState("");
   let [email, setEmail] = useState("");
   let [password, setPassword] = useState("");
+  let { userData, setUserData } = useContext(userDataContext);
 
   const handleSignUp = async (e) => {
     e.preventDefault();
@@ -26,6 +29,8 @@ function SignUp() {
         },
         { withCredentials: true },
       );
+      setUserData(result.data);
+      navigate("/");
       console.log(result.data);
     } catch (error) {
       console.log(error);

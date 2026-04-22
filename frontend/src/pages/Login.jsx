@@ -6,10 +6,12 @@ import { useNavigate } from "react-router-dom";
 import { authDataContext } from "../context/AuthContext";
 
 import axios from "axios";
+import { userDataContext } from "../context/UserContext";
 function Login() {
   let [show, setShow] = useState(false);
   let navigate = useNavigate();
   let { serverUrl } = useContext(authDataContext);
+  let { userData, setUserData } = useContext(userDataContext);
 
   let [email, setEmail] = useState("");
   let [password, setPassword] = useState("");
@@ -25,6 +27,8 @@ function Login() {
         },
         { withCredentials: true },
       );
+      setUserData(result.data);
+      navigate("/");
       console.log(result.data);
     } catch (error) {
       console.log(error);
