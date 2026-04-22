@@ -1,11 +1,35 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { IoMdEye } from "react-icons/io";
 import { IoMdEyeOff } from "react-icons/io";
 import { FaArrowLeftLong } from "react-icons/fa6";
 import { useNavigate } from "react-router-dom";
+import { authDataContext } from "../context/AuthContext";
+
+import axios from "axios";
 function Login() {
   let [show, setShow] = useState(false);
   let navigate = useNavigate();
+  let { serverUrl } = useContext(authDataContext);
+
+  let [email, setEmail] = useState("");
+  let [password, setPassword] = useState("");
+
+  const handleLogIn = async (e) => {
+    e.preventDefault();
+    try {
+      let result = await axios.post(
+        `${serverUrl}/api/auth/login`,
+        {
+          email,
+          password,
+        },
+        { withCredentials: true },
+      );
+      console.log(result.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <div className="w-[100vw] h-[100vh] flex items-center justify-center relative">
@@ -26,6 +50,8 @@ function Login() {
             id="email"
             className="w-[90%] h-[40px] border-[2px] border-[#555656] rounded-lg text-[18px] px-[20px]"
             required
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
           />
         </div>
         <div className="w-[90%] flex items-start justify-start flex-col gap-[10px] relative  ">
@@ -37,6 +63,8 @@ function Login() {
             id="password"
             className="w-[90%] h-[40px] border-[2px] border-[#555656] rounded-lg text-[18px] px-[20px] "
             required
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
           />
           {!show && (
             <IoMdEye
@@ -51,8 +79,10 @@ function Login() {
             />
           )}
         </div>
-        <button className="px-[50px] py-[10px] bg-[red] text-[white] text-[18px] md:px-[100px] rounded-lg mt-[20px]">
-          SignUp
+        <button
+          className="px-[50px] py-[10px] bg-[red] text-[white] text-[18px] md:px-[100px] rounded-lg mt-[20px]"
+          onClick={handleLogIn}>
+          Log In
         </button>
         <p className="text-[18px]">
           Already have a account?

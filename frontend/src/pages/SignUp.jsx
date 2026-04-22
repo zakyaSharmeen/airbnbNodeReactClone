@@ -1,11 +1,36 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { IoMdEye } from "react-icons/io";
 import { IoMdEyeOff } from "react-icons/io";
 import { FaArrowLeftLong } from "react-icons/fa6";
 import { useNavigate } from "react-router-dom";
+import { authDataContext } from "../context/AuthContext";
+import axios from "axios";
+
 function SignUp() {
   let [show, setShow] = useState(false);
   let navigate = useNavigate();
+  let { serverUrl } = useContext(authDataContext);
+  let [name, setName] = useState("");
+  let [email, setEmail] = useState("");
+  let [password, setPassword] = useState("");
+
+  const handleSignUp = async (e) => {
+    e.preventDefault();
+    try {
+      let result = await axios.post(
+        `${serverUrl}/api/auth/signup`,
+        {
+          name,
+          email,
+          password,
+        },
+        { withCredentials: true },
+      );
+      console.log(result.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <div className="w-[100vw] h-[100vh] flex items-center justify-center relative">
@@ -25,6 +50,8 @@ function SignUp() {
             id="name"
             className="w-[90%] h-[40px] border-[2px] border-[#555656]  rounded-lg text-[18px] px-[20px] "
             required
+            value={name}
+            onChange={(e) => setName(e.target.value)}
           />
         </div>
         <div className="w-[90%] flex items-start justify-start flex-col gap-[10px]">
@@ -36,6 +63,8 @@ function SignUp() {
             id="email"
             className="w-[90%] h-[40px] border-[2px] border-[#555656] rounded-lg text-[18px] px-[20px]"
             required
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
           />
         </div>
         <div className="w-[90%] flex items-start justify-start flex-col gap-[10px] relative  ">
@@ -47,6 +76,8 @@ function SignUp() {
             id="password"
             className="w-[90%] h-[40px] border-[2px] border-[#555656] rounded-lg text-[18px] px-[20px] "
             required
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
           />
           {!show && (
             <IoMdEye
@@ -61,7 +92,9 @@ function SignUp() {
             />
           )}
         </div>
-        <button className="px-[50px] py-[10px] bg-[red] text-[white] text-[18px] md:px-[100px] rounded-lg mt-[20px]">
+        <button
+          className="px-[50px] py-[10px] bg-[red] text-[white] text-[18px] md:px-[100px] rounded-lg mt-[20px]"
+          onClick={handleSignUp}>
           SignUp
         </button>
         <p className="text-[18px]">
