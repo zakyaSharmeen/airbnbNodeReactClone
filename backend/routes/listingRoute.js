@@ -3,7 +3,7 @@ import { isAuth } from "../middleware/isAuth.js";
 import upload from "../middleware/multer.js";
 import { addListing } from "../controllers/listingController.js";
 
-const listingRouter = express.Router();
+let listingRouter = express.Router();
 
 listingRouter.post(
   "/add",
@@ -13,6 +13,10 @@ listingRouter.post(
     { name: "image2", maxCount: 1 },
     { name: "image3", maxCount: 1 },
   ]),
+  (req, res, next) => {
+    console.log("ROUTE HIT");
+    next();
+  },
   addListing,
 );
 
