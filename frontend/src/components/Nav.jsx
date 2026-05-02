@@ -60,7 +60,7 @@ function Nav() {
         <div className="flex items-center justify-center    gap-[10px] relative">
           <span
             className="text-[18px] cursor-pointer rounded-[50px] hover:bg-[#ded9d9] px-[8px] py-[5px] hidden md:block"
-            onClick={() => navigate("/")}>
+            onClick={() => navigate("/listingpage1")}>
             List your home
           </span>
           <button
@@ -85,7 +85,7 @@ function Nav() {
           {showpopup && (
             <div className="w-[220px] h-[250px] absolute bg-slate-50 top-[110%] right-[3%] border-[1px] border-[#aaa9a9] z-10 rounded-lg md:right-[10%]">
               <ul className="w-[100%] h-[100%] text-[17px] flex items-start justify-around flex-col py-[10px]">
-                {
+                {!userData && (
                   <li
                     className="w-[100%] px-[15px] py-[10px] hover:bg-[#f4f3f3] cursor-pointer"
                     onClick={() => {
@@ -94,8 +94,8 @@ function Nav() {
                     }}>
                     Login
                   </li>
-                }
-                {
+                )}
+                {userData && (
                   <li
                     className="w-[100%] px-[15px] py-[10px] hover:bg-[#f4f3f3] cursor-pointer"
                     onClick={() => {
@@ -104,9 +104,15 @@ function Nav() {
                     }}>
                     Logout
                   </li>
-                }
+                )}
+
                 <div className="w-[100%] h-[1px] bg-[#c1c0c0]"></div>
-                <li className="w-[100%] px-[15px] py-[10px] hover:bg-[#f4f3f3] cursor-pointer">
+                <li
+                  className="w-[100%] px-[15px] py-[10px] hover:bg-[#f4f3f3] cursor-pointer"
+                  onClick={() => {
+                    navigate("/listingpage1");
+                    setShowpopup(false);
+                  }}>
                   List your Home
                 </li>
                 <li className="w-[100%] px-[15px] py-[10px] hover:bg-[#f4f3f3] cursor-pointer">

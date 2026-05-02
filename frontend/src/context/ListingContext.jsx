@@ -1,6 +1,7 @@
 import axios from "axios";
 import React, { createContext, useContext, useState } from "react";
 import { authDataContext } from "./AuthContext.jsx";
+import { useNavigate } from "react-router-dom";
 
 export const listingDataContext = createContext();
 function ListingContext({ children }) {
@@ -16,7 +17,7 @@ function ListingContext({ children }) {
   let [city, setCity] = useState("");
   let [landmark, setLandmark] = useState("");
   let [category, setCategory] = useState("");
-  // let [adding,setAdding]=useState(false)
+  let [adding, setAdding] = useState(false);
   // let [updating,setUpdating]=useState(false)
   // let [deleting,setDeleting]=useState(false)
   // let [listingData,setListingData]=useState([])
@@ -24,9 +25,11 @@ function ListingContext({ children }) {
   // let [cardDetails,setCardDetails]=useState(null)
   // let [searchData,setSearchData]=useState([])
   let { serverUrl } = useContext(authDataContext);
+  let navigate = useNavigate();
 
   const handleAddListing = async () => {
     try {
+      setAdding(true);
       let formData = new FormData();
       formData.append("title", title);
       formData.append("image1", backEndImage1);
@@ -38,12 +41,26 @@ function ListingContext({ children }) {
       formData.append("landMark", landmark);
       formData.append("category", category);
 
+      console.log("----FORM DATA DEBUG----");
+      for (let pair of formData.entries()) {
+        console.log(pair[0], pair[1]);
+      }
+      if (!backEndImage1 || !backEndImage2 || !backEndImage3) {
+        console.log("Images missing");
+        setAdding(false);
+        return;
+      }
       let result = await axios.post(serverUrl + "/api/listing/add", formData, {
         withCredentials: true,
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
       });
 
       console.log(result);
 
+      navigate("/");
+      setAdding(false);
       setTitle("");
       setDescription("");
       setFrontEndImage1(null);
@@ -58,6 +75,7 @@ function ListingContext({ children }) {
       setCategory("");
     } catch (error) {
       console.log(error);
+      setAdding(false);
     }
   };
 
